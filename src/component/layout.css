@@ -1,0 +1,13 @@
+.layoutcontainer{
+    display: flex;
+    width: 100vw;
+    border: 1px solid red;
+}
+.sidebarcontainer{
+    width:20%;
+    border: 1px solid blue;
+}
+.bodypartcontainer{
+    width: 80%;
+    border: 1px solid green;
+}
