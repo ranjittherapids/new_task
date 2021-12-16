@@ -48,15 +48,15 @@ export default function Layout() {
                                     })
                                     }
                                 </div>
-                                <p>Question</p>
+                                <p>Question:</p>
                                 <small>Question: Sure, Sex Is Great. But Have you Ever Tried _______?</small>
                                 <div className='cardContainer'>
-                                    <p>your card</p>
+                                    <p>your card:</p>
                                     <div className='cardbox'>
                                         {
-                                            [1, 2, 1,2,1,1,1,1,1,1,1,1, 212, 2, 12, 12, 1, 1].map(data => {
-                                                return <div className='card'>
-                                                    <p> hello i am card </p>
+                                            [1,2,1, 12, 1, 1].map(data => {
+                                                return <div className='cards'>
+                                                    <p>Saying GM No Matter What Time It Is </p>
                                                 </div>
 
                                             })
@@ -94,7 +94,7 @@ export default function Layout() {
                         <div className='chatbox'>
                             <p> <img src='./usericon.png' /> that why a greate chat</p>
                             <p> <img src='./usericon.png' /> that why a greate chat</p>
-                            <input type="text" placeholder='enter chat' />
+                            <input type="text"  placeholder='chat...' />
                         </div>
                     </div>
                 </div>
@@ -116,7 +116,9 @@ export default function Layout() {
                 </div>
                 <button>enter</button>
             </div>
-
+{/* <div style={} className='homepage'>
+hello homepage
+</div> */}
         </>
     )
 }
