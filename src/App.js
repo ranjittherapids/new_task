@@ -1,49 +1,90 @@
-import './App.css';
-import { useState } from 'react';
-import Reviews from './reviews';
+
+
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup'
+import { add_user } from './redux/action';
+import Profile from './profile';
+import './index.css';
+
 function App() {
-  const [Title, setTitle] = useState("")
-  const [Description, setDescription] = useState("")
-  const [SelectedRating, setSelectedRating] = useState(0)
-  const [ReviewDetails, setReviewDetails] = useState()
-  const clearform=()=>{
-    setSelectedRating(0)
-    setTitle();
-    setDescription()
-  }
+  const [UserList, SetUserList] = useState([])
+  const dispatch = useDispatch()
+  const selector = useSelector(data => data)
+  useEffect(() => {
+    SetUserList(selector.userData)
+  }, [selector])
+
+  const SignupSchema = Yup.object().shape({
+    firstName: Yup.string()
+      .min(2, 'Too Short!')
+      .max(50, 'Too Long!')
+      .required('Required'),
+      email: Yup.string().email('Invalid email').required('Required'),
+      password: Yup.string()
+      .required('Required'),
+      conformPassword: Yup.string()
+      .required('Required')
+         .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+         image: Yup.string()
+         .required('Required'),
+         
+  });
+
   return (
-    <div className="appcontainer">
-     <form onSubmit={(e)=>{
-      e.preventDefault();
-      if(Title!=="" && SelectedRating!==0){
-        setReviewDetails({
-          rating:SelectedRating,
-          title:Title,
-          description:Description
-        })
-      }
-     
-      clearform()
-     }}>
-     <div style={{display:"flex",gap:"10px"}}>
-    {[...Array(5)].map((data,index)=>{
-            if(index<SelectedRating){
-              return <div onMouseLeave={()=>{
-                setSelectedRating(x=>index+1)}} key={index} id='star-fives'></div>
-            }
-    else{
-      return <div onMouseEnter={()=>{
-        setSelectedRating(x=>index+1)}} key={index} id='star-five'></div>
-    }
-    })}
-    </div>
-      <input type='text' placeholder='Enter Title' value={Title?Title:""} onChange={(e)=>{setTitle(e.target.value)}} />
-      <input type='text' placeholder='Enter Description' value={Description?Description:""} onChange={(e)=>{setDescription(e.target.value)}} />
-      <button type='submit'>Add</button>
-     </form>
-     <div>{ReviewDetails?<Reviews details={ReviewDetails}/>:""}</div>
+    <div className="app_container">
+      <Formik
+        initialValues={{
+          firstName: '',
+          image:'',
+          email: '',
+          password:"",
+          conformPassword:""
+        }}
+        validationSchema={SignupSchema}
+        onSubmit={(values,{resetForm}) => {
+          const obj = {
+            name: values.firstName,
+            email: values.email,
+            password: values.password,
+            image:values.image
+          }
+          dispatch(add_user(obj))
+          
+          resetForm()
+        }}
+      >
+        {({ errors, touched,setFieldValue }) => (
+          <Form>
+            <Field name="firstName" placeholder="Enter Name" />
+            {errors.firstName && touched.firstName ? (
+              <div>{errors.firstName}</div>
+            ) : null}
+                <Field name="email" type="email" placeholder="Enter Email" />
+            {errors.email && touched.email ? <div>{errors.email}</div> : null}
+            <Field name="password" type="password" placeholder="Enter Password" />
+            {errors.password && touched.password ? <div>{errors.password}</div> : null}
+            <Field name="conformPassword" type="conformPassword" placeholder="Enter ConformPassword" />
+            {errors.conformPassword && touched.conformPassword ? <div>{errors.conformPassword}</div> : null}
+            <input name="image" type="file" accept="image/*"                 onChange={(e) => {
+                  const [file] = e.target.files;
+                  setFieldValue("image",(URL.createObjectURL(file)));
+                }}
+ />
+            {errors.image && touched.image ? (
+              <div>{errors.image}</div>
+            ) : null}
+        
+            <button type="submit">Submit</button>
+          </Form>
+        )}
+      </Formik>
+      <div className="profilePage_container">
+        <Profile UserList={UserList} />
+      </div>
+
     </div>
   );
 }
-
 export default App;

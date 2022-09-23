@@ -1,0 +1,25 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+.app_container{
+    display: flex;
+}
+.profilePage_container{
+   
+    height: 100vh ;
+    width: 70vw;
+}
+form{
+    width: 30vw;
+   
+    display: flex;
+    flex-direction: column;
+    gap:10px;
+}
+form>input,button{
+    height: 54px;
+    width: 100%;
+    padding: 5px 10px;
+}
